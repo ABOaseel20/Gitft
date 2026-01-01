@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>إهداء متبرع</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: Tahoma, Arial;
+            background: #f1f8f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: #fff;
+            width: 380px;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .15);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2e7d32;
+            margin-bottom: 20px
+        }
+        
+        input {
+            width: 100%;
+            padding: 13px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            box-sizing: border-box
+        }
+        
+        a.button {
+            display: block;
+            background: #25D366;
+            color: #fff;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-size: 17px
+        }
+        
+        .note {
+            font-size: 12px;
+            color: #777;
+            margin-top: 10px
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>إهداء للمتبرع 🤍</h1>
+
+        <input id="name" placeholder="اسم المتبرع">
+        <input id="activity" placeholder="اسم النشاط / الجهة">
+        <input id="phone" placeholder="رقم واتساب (9665xxxxxxx)">
+
+        <textarea id="message" placeholder="اكتب عبارة الإهداء هنا" style="width:100%;padding:13px;margin:10px 0;border-radius:10px;border:1px solid #ccc;font-size:15px;box-sizing:border-box;min-height:120px"></textarea>
+
+        <a class="button" href="#" onclick="this.href=makeLink()">إرسال الإهداء عبر واتساب</a>
+
+        <div class="note">أدخل الرقم بدون + أو مسافات</div>
+    </div>
+
+    <script>
+        function makeLink() {
+            let name = document.getElementById('name').value;
+            let activity = document.getElementById('activity').value;
+            let phone = document.getElementById('phone').value;
+
+            if (!name || !activity || !phone) {
+                alert('الرجاء تعبئة جميع الحقول');
+                return '#';
+            }
+
+            phone = phone.replace(/\D/g, '');
+
+            let customMsg = document.getElementById('message').value;
+
+            if (!customMsg) {
+                alert('الرجاء كتابة عبارة الإهداء');
+                return '#';
+            }
+
+            return 'https://wa.me/' + phone + '?text=' + encodeURIComponent(customMsg);
+        }
+    </script>
+
+</body>
+
+</html>
