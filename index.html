@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>إهداء متبرع</title>
+    <title>إهداء عبر واتساب</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
         body {
             margin: 0;
@@ -18,7 +19,7 @@
         
         .container {
             background: #fff;
-            width: 380px;
+            width: 420px;
             padding: 30px;
             border-radius: 18px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, .15);
@@ -26,11 +27,12 @@
         }
         
         h1 {
-            color: #2e7d32;
+            color: #25D366;
             margin-bottom: 20px
         }
         
-        input {
+        input,
+        textarea {
             width: 100%;
             padding: 13px;
             margin: 10px 0;
@@ -38,6 +40,11 @@
             border: 1px solid #ccc;
             font-size: 15px;
             box-sizing: border-box
+        }
+        
+        textarea {
+            min-height: 220px;
+            background: #f9f9f9;
         }
         
         a.button {
@@ -62,40 +69,47 @@
 <body>
 
     <div class="container">
-        <h1>إهداء للمتبرع 🤍</h1>
+        <h1>إهداء عبر واتساب 💚</h1>
 
-        <input id="name" placeholder="اسم المتبرع">
-        <input id="activity" placeholder="اسم النشاط / الجهة">
-        <input id="phone" placeholder="رقم واتساب (9665xxxxxxx)">
+        <!-- الخانات -->
+        <input id="donor" placeholder="اسم المتبرع">
+        <input id="phone" placeholder="رقم واتساب (9665xxxxxxxx)">
 
-        <textarea id="message" placeholder="اكتب عبارة الإهداء هنا" style="width:100%;padding:13px;margin:10px 0;border-radius:10px;border:1px solid #ccc;font-size:15px;box-sizing:border-box;min-height:120px"></textarea>
+        <!-- النص الثابت -->
+        <textarea id="message" readonly></textarea>
 
-        <a class="button" href="#" onclick="this.href=makeLink()">إرسال الإهداء عبر واتساب</a>
+        <a class="button" href="#" onclick="this.href=sendWhatsApp()">إرسال الإهداء</a>
 
-        <div class="note">أدخل الرقم بدون + أو مسافات</div>
+        <div class="note">
+            أدخل الرقم بدون + أو مسافات
+        </div>
     </div>
 
     <script>
-        function makeLink() {
-            let name = document.getElementById('name').value;
-            let activity = document.getElementById('activity').value;
-            let phone = document.getElementById('phone').value;
+        function sendWhatsApp() {
+            let donor = document.getElementById('donor').value.trim();
+            let phone = document.getElementById('phone').value.trim();
 
-            if (!name || !activity || !phone) {
-                alert('الرجاء تعبئة جميع الحقول');
+            if (!donor || !phone) {
+                alert('الرجاء إدخال اسم المتبرع ورقم الواتساب');
                 return '#';
             }
 
             phone = phone.replace(/\D/g, '');
 
-            let customMsg = document.getElementById('message').value;
+            let text =
+                `صدقة جارية تلقاها يوم العرض تنال بها شفاعة هذا الكتاب العظيم
+فجزاكم الله خيرًا لدعمكم وجعل لكم بمثل أجر متعلم كتاب الله
+فهي التجارة التي لا تبور
 
-            if (!customMsg) {
-                alert('الرجاء كتابة عبارة الإهداء');
-                return '#';
-            }
+فدعمكم استمرار لخيرية هذه الأمة بتعليم كتاب الله
+بين الهدايا الزائلة، ${donor} هدية خالدة..
+سهم في الخير، باسمك، ليظل أثره صدقة جارية
+بتعليم كتاب الله لطلاب الجمعية الخيرية لتحفيظ القرآن الكريم بالحريق`;
 
-            return 'https://wa.me/' + phone + '?text=' + encodeURIComponent(customMsg);
+            document.getElementById('message').value = text;
+
+            return 'https://wa.me/' + phone + '?text=' + encodeURIComponent(text);
         }
     </script>
 
