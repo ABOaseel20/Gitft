@@ -28,7 +28,22 @@
         
         h1 {
             color: #25D366;
-            margin-bottom: 20px
+            margin-bottom: 15px
+        }
+        
+        .options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .options label {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
         }
         
         input,
@@ -71,46 +86,88 @@
     <div class="container">
         <h1>إهداء عبر واتساب 💚</h1>
 
-        <!-- الخانات -->
-        <input id="donor" placeholder="اسم المتبرع">
+        <!-- الاختيار -->
+        <div class="options">
+            <label>
+            <input type="radio" name="type" value="self" checked onchange="updateMessage()">
+            إهداء لنفسي
+        </label>
+            <label>
+            <input type="radio" name="type" value="other" onchange="updateMessage()">
+            إهداء لشخص آخر
+        </label>
+        </div>
+
+        <!-- اسم المتبرع -->
+        <input id="donor" placeholder="اسم المتبرع" style="display:none">
+
+        <!-- اسم المُهدى إليه -->
+        <input id="receiver" placeholder="اسم المُهدى إليه" style="display:none">
+
+        <!-- رقم الواتساب -->
         <input id="phone" placeholder="رقم واتساب (9665xxxxxxxx)">
 
-        <!-- النص الثابت -->
+        <!-- الرسالة -->
         <textarea id="message" readonly></textarea>
 
         <a class="button" href="#" onclick="this.href=sendWhatsApp()">إرسال الإهداء</a>
 
-        <div class="note">
-            أدخل الرقم بدون + أو مسافات
-        </div>
+        <div class="note">أدخل الرقم بدون + أو مسافات</div>
     </div>
 
     <script>
+        function updateMessage() {
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const donorInput = document.getElementById('donor');
+            const receiverInput = document.getElementById('receiver');
+            const messageBox = document.getElementById('message');
+
+            if (type === 'self') {
+                donorInput.style.display = 'none';
+                receiverInput.style.display = 'none';
+                messageBox.value =
+                    `صدقة جارية تلقاها يوم العرض تنال بها شفاعة هذا الكتاب العظيم
+فجزاكم الله خيرا لدعمكم وجعل لكم بمثل أجر متعلم كتاب الله
+فهي التجارة التي لا تبور
+
+فدعمكم استمرار لخيرية هذه الأمة بتعليم كتاب الله`;
+            } else {
+                donorInput.style.display = 'block';
+                receiverInput.style.display = 'block';
+                messageBox.value =
+                    `بين الهدايا الزائلة، اختار لك (اسم المتبرع) هدية خالدة..
+سهم في الخير، باسمك، ليظل أثره صدقة جارية
+بتعليم كتاب الله لطلاب الجمعية الخيرية لتحفيظ القرآن الكريم بالحريق`;
+            }
+        }
+
         function sendWhatsApp() {
+            const type = document.querySelector('input[name="type"]:checked').value;
             let donor = document.getElementById('donor').value.trim();
+            let receiver = document.getElementById('receiver').value.trim();
             let phone = document.getElementById('phone').value.trim();
 
-            if (!donor || !phone) {
-                alert('الرجاء إدخال اسم المتبرع ورقم الواتساب');
+            if (!phone) {
+                alert('الرجاء إدخال رقم الواتساب');
                 return '#';
             }
 
+            let text = document.getElementById('message').value;
+
+            if (type === 'other') {
+                if (!donor || !receiver) {
+                    alert('الرجاء إدخال اسم المتبرع واسم المُهدى إليه');
+                    return '#';
+                }
+                text = text.replace('(اسم المتبرع)', donor);
+                text += `\n\nإهداء إلى: ${receiver}`;
+            }
+
             phone = phone.replace(/\D/g, '');
-
-            let text =
-                `صدقة جارية تلقاها يوم العرض تنال بها شفاعة هذا الكتاب العظيم
-فجزاكم الله خيرًا لدعمكم وجعل لكم بمثل أجر متعلم كتاب الله
-فهي التجارة التي لا تبور
-
-فدعمكم استمرار لخيرية هذه الأمة بتعليم كتاب الله
-بين الهدايا الزائلة، ${donor} هدية خالدة..
-سهم في الخير، باسمك، ليظل أثره صدقة جارية
-بتعليم كتاب الله لطلاب الجمعية الخيرية لتحفيظ القرآن الكريم بالحريق`;
-
-            document.getElementById('message').value = text;
-
             return 'https://wa.me/' + phone + '?text=' + encodeURIComponent(text);
         }
+
+        updateMessage();
     </script>
 
 </body>
